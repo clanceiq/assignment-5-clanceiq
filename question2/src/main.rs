@@ -3,26 +3,15 @@ pub struct L{
     y: usize,
 }
 
-pub struct LIterator<'a> {
-    l: &'a L,
-    line: usize,
-}
-
-
 // TODO: add iterators
 pub fn foo(text: &str, string: &str) -> Vec<L> {
-    let mut r= Vec::new();
-    let mut x=0;
-    for line in text.lines() {
-        for (y, _) in line.match_indices(string){
-            r.push(L{
-                x : x,
-                y: y,
-            });
-        }
-        x+=1;
-    }
-    r  
+    text.lines() // split text into lines
+        .enumerate() // gives each line a number (x)
+        .flat_map(|(x, line)| { //
+            line.match_indices(string) // find all occurences of "string" in the line
+                .map(move |(y, _)| L { x, y }) // for each occurence, turn into an L struct
+        })
+        .collect() // creates a vector of all the L structs
 }
 
 fn main() {
